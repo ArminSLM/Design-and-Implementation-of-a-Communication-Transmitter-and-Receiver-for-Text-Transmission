@@ -1,0 +1,96 @@
+
+% Step 0: Prompt the user to select a file
+[file, path] = uigetfile('*.txt', 'Select a text file');
+if isequal(file, 0)
+    disp('User selected Cancel');
+    return;
+else
+    filename = fullfile(path, file);
+    disp(['User selected ', filename]);
+end
+
+% Step 1: Read the content of the file
+fileID = fopen(filename, 'r');
+text = fread(fileID, '*char')';
+fclose(fileID);
+
+% Step 2: Count the frequency of each character
+unique_chars = unique(text);
+freq = histc(text, unique_chars);
+
+% Step 3: Calculate probabilities
+probabilities = freq / sum(freq);
+
+% Step 4: Calculate entropy
+entropy = -sum(probabilities .* log2(probabilities));
+
+% Display entropy
+fprintf('Entropy of the text: %.4f bits\n', entropy);
+
+% Step 5: Build the Huffman tree
+symbols = num2cell(unique_chars); % Convert to cell array of characters
+dict = huffmandict(symbols, probabilities);
+
+% Step 6: Encode the text
+text_cell = num2cell(text); % Convert text to cell array of characters
+encoded_binary = huffmanenco(text_cell, dict);
+
+% Convert encoded binary sequence to a string of '0's and '1's
+encoded_text = sprintf('%d', encoded_binary);
+
+% Step 7: Calculate the average length of Huffman encoded symbols
+avg_length = 0;
+for i = 1:length(dict)
+    symbol_length = length(dict{i, 2});
+    avg_length = avg_length + probabilities(i) * symbol_length;
+end
+
+% Step 8: Calculate efficiency
+efficiency = entropy / avg_length;
+
+
+%rec=double(out.armin(250:100:length(out.armin)));
+rec1=reshape(rec,1,[]);
+
+% Step 9: Decode the text (optional)
+decoded_cell = huffmandeco(rec1, dict);
+decoded_text = cell2mat(decoded_cell); % Convert back to character array
+
+% Display results
+fprintf('Original Text: %s\n', text);
+fprintf('Encoded Text: %s\n', encoded_text);
+fprintf('Decoded Text: %s\n', decoded_text);
+fprintf('Average Length of Huffman Encoded Symbols: %.4f bits\n', avg_length);
+fprintf('Efficiency of Huffman Coding: %.4f\n', efficiency);
+
+T=1e-3;
+t1=0:14274;
+t=t1*T;
+u=reshape(encoded_binary,14275,1);
+yes.time=t;
+ yes.signals.values=u;
+ yes.signals.dimensions=1;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%rec=double(out.armin(250:100:length(out.armin)));
+%rec1=reshape(rec,1,[]);
+%huffman_decoder(rec1);
+
+%function huffman_decoder(a)
+    % Function to decode Huffman encoded data back to text
+
+    % Step 1: Define the Huffman dictionary (replace with your actual Huffman dictionary)
+    %symbols = {'', '', '(', ' ',')',',','-','.','1','2','3',':',';','A','B','C','D','E','F','H','I','J','M','N','O','P','S','T','W','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'}; % Example symbols
+    %probabilities = [0.000307976593778873 , 0.0107791807822605,0.0107791807822605,0.153680320295658,	0.000307976593778873	,0.000307976593778873	,0.00585155528179858	,0.000923929781336618	,0.00985525100092393	,0.000923929781336618	,0.000923929781336618	,0.000307976593778873	,0.000307976593778873	,0.000307976593778873	,0.00184785956267324	,0.000923929781336618	,0.000307976593778873	,0.000307976593778873	,0.000615953187557746	,0.000923929781336618	,0.00215583615645211	,0.000307976593778873	,0.00123190637511549	,0.000307976593778873	,0.000307976593778873	,0.00123190637511549	,0.000307976593778873	,0.00307976593778873	,0.000307976593778873	,0.0585155528179858	,0.0141669233138281	,0.0301817061903295	,0.0184785956267324	,0.100400369571913	,0.0230982445334155	,0.0157068062827225	,0.0360332614721281	,0.0652910378811210	,0.000615953187557746	,0.000923929781336618	,0.0320295657530028	,0.0283338466276563	,0.0566676932553126	,0.0628272251308901	,0.0141669233138281	,0.00153988296889436	,0.0446566060979366	,0.0588235294117647	,0.0745303356944872	,0.0252540806898676	,0.00400369571912535	,0.00893132121958731	,0.00184785956267324	,0.0129350169387127	,0.000307976593778873]
+   %dicti = huffmandict(symbols, probabilities); % Example Huffman dictionary
+
+
+    % Step 2: Decode the Huffman encoded binary sequence
+    %%a = huffmandeco(out.armin, dicti);
+
+    % Step 3: Convert decoded symbols to text
+    %decoded_text = cell2mat(a);
+
+    % Display the decoded text
+    %disp(['Decoded text: ', decoded_text]);
+%end
